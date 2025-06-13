@@ -46,11 +46,14 @@ export class PrismaRepository<T, ID = number> implements IRepository<T, ID> {
     });
   }
 
-  async find(options: {
-    where?: Partial<T>;
-    select?: Partial<Record<keyof T, boolean>>;
-    orderBy?: { [K in keyof T]?: "asc" | "desc" } | Array<{ [K in keyof T]?: "asc" | "desc" }>;
-  }, tx?: Prisma.TransactionClient): Promise<T[]> {
+  async find(
+    options: {
+      where?: Partial<T>;
+      select?: Partial<Record<keyof T, boolean>>;
+      orderBy?: { [K in keyof T]?: "asc" | "desc" } | Array<{ [K in keyof T]?: "asc" | "desc" }>;
+    },
+    tx?: Prisma.TransactionClient,
+  ): Promise<T[]> {
     const model = this.getModel(tx ?? this.tx);
 
     return model.findMany({
@@ -60,7 +63,10 @@ export class PrismaRepository<T, ID = number> implements IRepository<T, ID> {
     });
   }
 
-  async upsert(options: { where: Partial<T>; create: T; update: Partial<T> }, tx?: Prisma.TransactionClient): Promise<T> {
+  async upsert(
+    options: { where: Partial<T>; create: T; update: Partial<T> },
+    tx?: Prisma.TransactionClient,
+  ): Promise<T> {
     const model = this.getModel(tx ?? this.tx);
 
     return model.upsert({

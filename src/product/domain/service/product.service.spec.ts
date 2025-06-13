@@ -37,14 +37,14 @@ describe("ProductService", () => {
       updateStock: jest.fn(),
       prisma: {
         $transaction: jest.fn((cb) => cb({})),
-      }
+      },
     };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ProductService, 
+        ProductService,
         { provide: TransactionService, useValue: transactionStub },
-        { provide: IPRODUCT_REPOSITORY, useValue: productRepositoryStub }
+        { provide: IPRODUCT_REPOSITORY, useValue: productRepositoryStub },
       ],
     }).compile();
 
@@ -203,28 +203,28 @@ describe("ProductService", () => {
   describe("deductProductStockBulk", () => {
     it("2개 상품을 각각 3개 씩 재고를 차감하면 차감한 상품들의 총 상품액을 반환함", async () => {
       (productRepositoryStub.findById as jest.Mock)
-      .mockResolvedValueOnce({ id: 1, productName: "test1", stock: 100, price: 200 })
-      .mockResolvedValueOnce({ id: 2, productName: "test2", stock: 20, price: 7 });
+        .mockResolvedValueOnce({ id: 1, productName: "test1", stock: 100, price: 200 })
+        .mockResolvedValueOnce({ id: 2, productName: "test2", stock: 20, price: 7 });
 
       (productRepositoryStub.updateStock as jest.Mock)
-      .mockResolvedValueOnce({ id: 1, productName: "test1", stock: 98, price: 200 })
-      .mockResolvedValueOnce({ id: 2, productName: "test2", stock: 18, price: 7 });
+        .mockResolvedValueOnce({ id: 1, productName: "test1", stock: 98, price: 200 })
+        .mockResolvedValueOnce({ id: 2, productName: "test2", stock: 18, price: 7 });
 
       const predictCalls = [
         [1, 98, {}],
         [2, 18, {}],
-      ]
+      ];
 
       const commands: DeductStockCommand[] = [
         { productId: 1, amount: 2 },
         { productId: 2, amount: 2 },
-      ]
+      ];
 
       const result = await productService.deductProductStockBulk(commands);
 
       expect(result).toBe(414);
       expect(productRepositoryStub.updateStock).toHaveBeenCalledTimes(2);
       expect(productRepositoryStub.updateStock.mock.calls).toEqual(predictCalls);
-    })
+    });
   });
 });

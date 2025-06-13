@@ -12,7 +12,7 @@ export class MemberRepository extends PrismaRepository<Member> implements IMembe
 
   async updateBalance(id: number, balance: number, tx?: Prisma.TransactionClient): Promise<Member> {
     const client = tx ?? this.prisma;
-    
+
     return await this.updateById(id, { balance }, client);
   }
 }

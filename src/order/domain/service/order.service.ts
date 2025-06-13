@@ -35,13 +35,13 @@ export class OrderService {
       for (const product of products) {
         totalSales += product.price * product.amount;
       }
-  
+
       const order = await this.orderRepository.createOrder(memberId, totalSales, OrderStatus.PAYMENT_PREPARING, client);
-  
+
       for (const product of products) {
         await this.orderProductRepository.createOrderProduct(order.id, product.id, product.amount, client);
       }
-  
+
       const result: OrderResult = {
         id: order.id,
         memberId: order.memberId,
@@ -65,18 +65,18 @@ export class OrderService {
       if (order.status != "결제준비") {
         throw new Error("CANT_PAY_ORDER");
       }
-  
+
       const paidOrder = await this.orderRepository.paymentCompleteOrder(orderId, client);
-  
+
       const result: OrderResult = {
         id: paidOrder.id,
         memberId: paidOrder.memberId,
         totalSales: paidOrder.totalSales,
         status: getEnumFromValue(OrderStatus, paidOrder.status),
       };
-  
+
       return result;
-    })
+    });
   }
 
   async cancelOrder(command: CancelOrderCommand, txc?: Prisma.TransactionClient): Promise<OrderResult> {
@@ -92,16 +92,16 @@ export class OrderService {
       if (order.status == "주문취소") {
         throw new Error("ALREADY_CANCELED_ORDER");
       }
-  
+
       const canceledOrder = await this.orderRepository.cancelOrder(orderId, client);
-  
+
       const result: OrderResult = {
         id: canceledOrder.id,
         memberId: canceledOrder.memberId,
         totalSales: canceledOrder.totalSales,
         status: getEnumFromValue(OrderStatus, canceledOrder.status),
       };
-  
+
       return result;
     });
   }

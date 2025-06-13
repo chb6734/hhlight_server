@@ -12,7 +12,7 @@ export class ProductRepository extends PrismaRepository<Product> implements IPro
 
   async updateStock(id: number, stock: number, tx?: Prisma.TransactionClient): Promise<Product> {
     const client = tx ?? this.prisma;
-    
+
     return await this.updateById(id, { stock }, client);
   }
 }

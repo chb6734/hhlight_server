@@ -31,7 +31,7 @@ describe("ProductSalesStatService", () => {
       getTop5ProductByAmountLast3Days: jest.fn(),
       prisma: {
         $transaction: jest.fn((cb) => cb({})),
-      }
+      },
     };
 
     const module: TestingModule = await Test.createTestingModule({

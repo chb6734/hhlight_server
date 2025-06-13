@@ -10,7 +10,7 @@ export interface IPaymentRepository extends IRepository<Payment> {
     paid_amount: number,
     approved_at: Date,
     status: PaymentStatus,
-    tx?: Prisma.TransactionClient
+    tx?: Prisma.TransactionClient,
   ): Promise<Payment>;
 }
 

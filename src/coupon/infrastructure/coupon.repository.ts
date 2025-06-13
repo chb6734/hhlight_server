@@ -15,13 +15,7 @@ export class CouponRepository extends PrismaRepository<Coupon> implements ICoupo
 
     return await client.coupon.findMany({
       where: {
-        OR: [
-          { stock: { gt: 0 } },
-          { stock: 2147483647 }, // 무제한 쿠폰도 포함
-        ],
-      },
-      orderBy: {
-        id: "asc",
+        stock: { gt: 0 },
       },
     });
   }

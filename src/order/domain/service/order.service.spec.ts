@@ -23,7 +23,7 @@ describe("OrderService", () => {
     transactionStub = {
       executeInTransaction: jest.fn((cb) => cb({})),
     };
-    
+
     orderRepository = {
       createOrder: jest.fn(),
       findById: jest.fn(),
@@ -89,25 +89,25 @@ describe("OrderService", () => {
         id: 1,
         memberId: 1,
         totalSales: 2400000,
-        status: "결제준비"
+        status: "결제준비",
       });
       (orderRepository.paymentCompleteOrder as jest.Mock).mockResolvedValue({
         id: 1,
         memberId: 1,
         totalSales: 2400000,
-        status: "결제완료"
-      })
+        status: "결제완료",
+      });
 
       const predictResult: OrderResult = {
         id: 1,
         memberId: 1,
         totalSales: 2400000,
-        status: OrderStatus.PAYMENT_COMPLETED
-      }
+        status: OrderStatus.PAYMENT_COMPLETED,
+      };
 
       const payOrderCommand: PayOrderCommand = {
-        orderId: 1
-      }
+        orderId: 1,
+      };
 
       const result = await orderService.payOrder(payOrderCommand);
 
@@ -116,31 +116,31 @@ describe("OrderService", () => {
       expect(orderRepository.findById).toHaveBeenCalledWith(1, {});
       expect(orderRepository.paymentCompleteOrder).toHaveBeenCalledTimes(1);
       expect(orderRepository.findById).toHaveBeenCalledWith(1, {});
-    })
+    });
 
     it("존재하지 않는 주문을 결제 완료하려 하면 'ORDER_NOT_FOUND' 메시지와 함께 에러 발생❌", async () => {
       orderRepository.findById.mockResolvedValue(null);
 
       const command: PayOrderCommand = { orderId: 999 };
-      
+
       await expect(orderService.payOrder(command)).rejects.toThrow("ORDER_NOT_FOUND");
       expect(orderRepository.paymentCompleteOrder).not.toHaveBeenCalled();
-    })
+    });
 
     it("결제준비 상태가 아닌 주문을 결제 완료하려 하면 'CANT_PAY_ORDER' 메시지와 함께 에러 발생❌", async () => {
       (orderRepository.findById as jest.Mock).mockResolvedValue({
         id: 1,
         memberId: 1,
         totalSales: 2400000,
-        status: "결제완료"
+        status: "결제완료",
       });
 
       const command: PayOrderCommand = { orderId: 1 };
 
       await expect(orderService.payOrder(command)).rejects.toThrow("CANT_PAY_ORDER");
       expect(orderRepository.paymentCompleteOrder).not.toHaveBeenCalled();
-    })
-  })
+    });
+  });
 
   describe("cancelOrder", () => {
     it("존재하지 않는 주문을 취소하려 하면 'ORDER_NOT_FOUND' 메시지와 함께 에러 발생❌", async () => {

@@ -1,24 +1,8 @@
 import { PrismaRepository } from "@app/database/prismaRepository.impl";
-import { Prisma } from "@prisma/client";
+import { Coupon, Member_Coupon, Prisma } from "@prisma/client";
 import { IMemberCouponRepository } from "../domain/repository/member_coupon.repository.interface";
 import { PrismaService } from "@app/database/prisma/prisma.service";
 import { Injectable } from "@nestjs/common";
-
-type Member_Coupon = {
-  id: number;
-  memberId: number;
-  couponId: number;
-  isUsed: boolean;
-  coupon?: Coupon;
-};
-
-type Coupon = {
-  id: number;
-  name: string;
-  type: string;
-  offFigure: number;
-  stock: number;
-};
 
 @Injectable()
 export class MemberCouponRepository extends PrismaRepository<Member_Coupon> implements IMemberCouponRepository {

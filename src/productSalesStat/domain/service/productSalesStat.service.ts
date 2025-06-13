@@ -20,13 +20,21 @@ export class ProductSalesStatService {
       const client = txc ?? tx;
 
       const result = await this.productSalesStatRepository.getTop5ProductByAmountLast3Days(client);
-      const formatted = result.map(r => ({ ...r, rank: Number(r.rank), amount: Number(r.amount), sales: Number(r.sales) }));
+      const formatted = result.map((r) => ({
+        ...r,
+        rank: Number(r.rank),
+        amount: Number(r.amount),
+        sales: Number(r.sales),
+      }));
 
       return formatted;
     });
   }
 
-  async addProductSalesStat(command: AddProductSalesStatCommand, txc?: Prisma.TransactionClient): Promise<AddProductSalesStatResult> {
+  async addProductSalesStat(
+    command: AddProductSalesStatCommand,
+    txc?: Prisma.TransactionClient,
+  ): Promise<AddProductSalesStatResult> {
     const salesDate: Date = command.salesDate;
     const paidProducts: PaidProduct[] = command.paidProducts;
 
@@ -35,24 +43,31 @@ export class ProductSalesStatService {
 
       let total_paidSales = 0;
       for (const paidProduct of paidProducts) {
-        const productStat: Partial<Product_Sales_Stat>[] = await this.productSalesStatRepository.find({
-          where: { salesDate, productId: paidProduct.productId },
-          select: { total_amount: true, total_sales: true },
-        }, client);
+        const productStat: Partial<Product_Sales_Stat>[] = await this.productSalesStatRepository.find(
+          {
+            where: { salesDate, productId: paidProduct.productId },
+            select: { total_amount: true, total_sales: true },
+          },
+          client,
+        );
         if (productStat.length == 0) {
           await this.productSalesStatRepository.create({ salesDate, ...paidProduct }, client);
         } else {
           const paidProductAmount = paidProduct.total_amount;
           const paidProductSales = paidProduct.total_sales;
-          await this.productSalesStatRepository.updateById(paidProduct.productId, {
-            total_amount: productStat[0].total_amount + paidProductAmount,
-            total_sales: productStat[0].total_sales + paidProductSales,
-          }, client);
+          await this.productSalesStatRepository.updateById(
+            paidProduct.productId,
+            {
+              total_amount: productStat[0].total_amount + paidProductAmount,
+              total_sales: productStat[0].total_sales + paidProductSales,
+            },
+            client,
+          );
         }
-  
+
         total_paidSales += paidProduct.total_sales;
       }
-  
+
       return { total_sales: total_paidSales };
     });
   }

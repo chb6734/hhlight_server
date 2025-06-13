@@ -13,9 +13,9 @@ export class ProductSalesStatRepository
     super(prisma, (client) => client.product_Sales_Stat);
   }
 
-  async getTop5ProductByAmountLast3Days(tx?: Prisma.TransactionClient): Promise<
-    { rank: number; productId: number; productName: string; amount: number; sales: number }[]
-  > {
+  async getTop5ProductByAmountLast3Days(
+    tx?: Prisma.TransactionClient,
+  ): Promise<{ rank: number; productId: number; productName: string; amount: number; sales: number }[]> {
     const client = tx ?? this.prisma;
 
     return await client.$queryRaw<

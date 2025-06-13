@@ -14,12 +14,12 @@ import { PrismaModule } from "@app/database/prisma/prisma.module";
     CouponService,
     {
       provide: ICOUPON_REPOSITORY,
-      useClass: CouponRepository
+      useClass: CouponRepository,
     },
     {
       provide: IMEMBER_COUPON_REPOSITORY,
-      useClass: MemberCouponRepository
-    }
+      useClass: MemberCouponRepository,
+    },
   ],
   exports: [CouponService],
 })

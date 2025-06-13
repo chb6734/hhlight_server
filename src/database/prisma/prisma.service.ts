@@ -5,10 +5,7 @@ import { PrismaClient } from "@prisma/client";
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor() {
     const runMode = process.env.RUN_MODE;
-    const databaseUrl =
-      runMode === 'test'
-        ? process.env.TEST_DATABASE_URL
-        : process.env.DATABASE_URL;
+    const databaseUrl = runMode === "test" ? process.env.TEST_DATABASE_URL : process.env.DATABASE_URL;
 
     super({
       datasources: {

@@ -11,7 +11,12 @@ export class OrderProductRepository extends PrismaRepository<Order_Product> impl
     super(prisma, (client) => client.order_Product);
   }
 
-  async createOrderProduct(orderId: number, productId: number, amount: number, tx?: Prisma.TransactionClient): Promise<Order_Product> {
+  async createOrderProduct(
+    orderId: number,
+    productId: number,
+    amount: number,
+    tx?: Prisma.TransactionClient,
+  ): Promise<Order_Product> {
     const client = tx ?? this.prisma;
 
     return await client.order_Product.create({

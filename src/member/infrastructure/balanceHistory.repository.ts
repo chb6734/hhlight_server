@@ -16,8 +16,8 @@ export class BalanceHisotryRepository extends PrismaRepository<Balance_History> 
     return await client.balance_History.create({
       data: {
         memberId,
-        amount
-      }
+        amount,
+      },
     });
   }
 }

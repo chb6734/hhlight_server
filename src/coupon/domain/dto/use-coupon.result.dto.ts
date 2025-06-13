@@ -1,5 +1,5 @@
-import { IsInt, IsObject, Max, Min } from "class-validator"
-import { Coupon } from "@prisma/client"
+import { IsInt, IsObject, Max, Min } from "class-validator";
+import { Coupon } from "@prisma/client";
 
 export class UseCouponResult {
   @IsObject()

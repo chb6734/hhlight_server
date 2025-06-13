@@ -56,18 +56,17 @@ export class MemberService {
       if (member.balance + amount > 2_147_483_647) {
         throw Error("OVER_BALANCE_LIMIT");
       }
-  
+
       const result: Member = await this.memberRepository.updateBalance(memberId, member.balance + amount, client);
       await this.balanceHistoryRepository.addHistory(memberId, amount, client);
-  
+
       const balanceResult: BalanceResult = {
         memberId: result.id,
         balance: result.balance,
       };
-  
+
       return balanceResult;
     });
-
   }
 
   async useBalance(command: UseBalanceCommand, txc?: Prisma.TransactionClient): Promise<BalanceResult> {
@@ -84,17 +83,16 @@ export class MemberService {
       if (member.balance < amount) {
         throw Error("NOT_ENOUTH_BALANCE");
       }
-  
+
       const result: Member = await this.memberRepository.updateBalance(memberId, member.balance - amount, client);
       await this.balanceHistoryRepository.addHistory(memberId, -1 * amount, client);
-  
+
       const balanceResult: BalanceResult = {
         memberId: result.id,
         balance: result.balance,
       };
-  
+
       return balanceResult;
     });
-
   }
 }

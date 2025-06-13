@@ -18,14 +18,14 @@ export class PaymentRepository extends PrismaRepository<Payment> implements IPay
     paid_amount: number,
     approved_at: Date,
     status: PaymentStatus,
-    tx?: Prisma.TransactionClient
+    tx?: Prisma.TransactionClient,
   ): Promise<Payment> {
     const client = tx ?? this.prisma;
 
     return await client.payment.create({
       data: {
         order: { connect: { id: orderId } },
-        coupon: { connect: { id: couponId }},
+        coupon: { connect: { id: couponId } },
         member: { connect: { id: memberId } },
         paid_amount,
         approved_at,

@@ -81,7 +81,7 @@ describe("PaymentService", () => {
       15000,
       expect.any(Date),
       PaymentStatus.PAYMENT_COMPLETED,
-      {}
+      {},
     );
   });
 });

@@ -11,7 +11,12 @@ export class OrderRepository extends PrismaRepository<Order> implements IOrderRe
     super(prisma, (client) => client.order);
   }
 
-  async createOrder(memberId: number, totalSales: number, status: OrderStatus, tx?: Prisma.TransactionClient): Promise<Order> {
+  async createOrder(
+    memberId: number,
+    totalSales: number,
+    status: OrderStatus,
+    tx?: Prisma.TransactionClient,
+  ): Promise<Order> {
     const client = tx ?? this.prisma;
 
     return await client.order.create({
@@ -31,7 +36,7 @@ export class OrderRepository extends PrismaRepository<Order> implements IOrderRe
 
   async cancelOrder(orderId: number, tx?: Prisma.TransactionClient): Promise<Order> {
     const client = tx ?? this.prisma;
-    
+
     return await this.updateById(orderId, { status: OrderStatus.ORDER_CANCEL }, client);
   }
 

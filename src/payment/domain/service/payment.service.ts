@@ -27,9 +27,12 @@ export class PaymentService {
       // orderId 를 이용해 검색하였을 때, 검색되는 내용이 있다면 이미 결제 이력이 있으므로 Error 반환해야 함.
       const client = txc ?? tx;
 
-      const payment_record = await this.paymentRepository.find({
-        where: { orderId },
-      }, client);
+      const payment_record = await this.paymentRepository.find(
+        {
+          where: { orderId },
+        },
+        client,
+      );
       if (payment_record.length != 0) {
         throw new Error("ALREADY_PREOCESSED");
       }
@@ -41,7 +44,7 @@ export class PaymentService {
         amount,
         approved_at,
         PaymentStatus.PAYMENT_COMPLETED,
-        client
+        client,
       );
     });
   }

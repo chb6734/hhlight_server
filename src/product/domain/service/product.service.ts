@@ -79,7 +79,7 @@ export class ProductService {
       const result: Product = await this.productRepository.updateStock(productId, product.stock - amount, client);
 
       return result;
-    })
+    });
   }
 
   async deductProductStockBulk(commands: DeductStockCommand[], txc?: Prisma.TransactionClient): Promise<number> {
@@ -87,12 +87,12 @@ export class ProductService {
       const client = txc ?? tx;
 
       let result = 0;
-      for(const command of commands) {
+      for (const command of commands) {
         const deductedProduct = await this.deductProductStock(command, client);
         result += deductedProduct.price * command.amount;
       }
 
       return result;
-    })
+    });
   }
 }

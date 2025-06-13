@@ -32,7 +32,10 @@ export class PaymentFacade {
     private readonly productSalesStatService: ProductSalesStatService,
   ) {}
 
-  async processPayment(processPaymentReqDto: ProcessPaymentFacadeReqDto, txc?: Prisma.TransactionClient): Promise<PaymentResult> {
+  async processPayment(
+    processPaymentReqDto: ProcessPaymentFacadeReqDto,
+    txc?: Prisma.TransactionClient,
+  ): Promise<PaymentResult> {
     const orderId = processPaymentReqDto.orderId;
     const memberId = processPaymentReqDto.memberId;
     const couponId = processPaymentReqDto.couponId;
@@ -46,12 +49,15 @@ export class PaymentFacade {
       const getOrderCommand: GetOrderCommand = { orderId };
       const order = await this.orderService.getOrder(getOrderCommand, client);
 
-      const deductStockCommands: DeductStockCommand[] = order.orderProducts.map(({ productId, amount }) => ({ productId, amount }));
+      const deductStockCommands: DeductStockCommand[] = order.orderProducts.map(({ productId, amount }) => ({
+        productId,
+        amount,
+      }));
 
       const amount = await this.productService.deductProductStockBulk(deductStockCommands, client);
 
       const useCouponCommand: UseCouponCommand = { memberId, couponId, amount };
-      const {coupon, discountedAmount} = await this.couponService.useCoupon(useCouponCommand, client);
+      const { coupon, discountedAmount } = await this.couponService.useCoupon(useCouponCommand, client);
 
       const useBalanceCommand: UseBalanceCommand = {
         memberId,
@@ -60,7 +66,13 @@ export class PaymentFacade {
       await this.memberService.useBalance(useBalanceCommand, client);
 
       const today = new Date();
-      const processPaymentCommand: ProcessPaymentCommand = { orderId, memberId, couponId, approved_at: today, amount: discountedAmount };
+      const processPaymentCommand: ProcessPaymentCommand = {
+        orderId,
+        memberId,
+        couponId,
+        approved_at: today,
+        amount: discountedAmount,
+      };
       const payment: Payment = await this.paymentService.processPayment(processPaymentCommand, client);
 
       const salesDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
