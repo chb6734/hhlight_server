@@ -1,11 +1,11 @@
-import { PrismaRepository } from "@app/database/prismaRepository.impl"
+import { PrismaRepository } from "@app/database/prismaRepository.impl";
 import { Coupon } from "@prisma/client";
 import { ICouponRepository } from "../coupon.repository.interface";
 import { PrismaService } from "@app/database/prisma/prisma.service";
 
 export class CouponRepository extends PrismaRepository<Coupon> implements ICouponRepository {
   constructor(protected readonly prisma: PrismaService) {
-    super(prisma, prisma.coupon);
+    super(prisma, (client) => client.coupon);
   }
 
   async getAllAvailableCoupons(): Promise<Coupon[]> {
@@ -13,7 +13,7 @@ export class CouponRepository extends PrismaRepository<Coupon> implements ICoupo
       where: {
         stock: { gt: 0 },
       },
-    })
+    });
   }
 
   async addCoupon(couponId: number): Promise<Coupon> {
@@ -21,10 +21,10 @@ export class CouponRepository extends PrismaRepository<Coupon> implements ICoupo
       where: { id: couponId },
       data: {
         stock: {
-          increment: 1
-        }
-      }
-    })
+          increment: 1,
+        },
+      },
+    });
   }
 
   async deductCoupon(couponId: number): Promise<Coupon> {
@@ -32,9 +32,9 @@ export class CouponRepository extends PrismaRepository<Coupon> implements ICoupo
       where: { id: couponId },
       data: {
         stock: {
-          decrement: 1
-        }
-      }
-    })
+          decrement: 1,
+        },
+      },
+    });
   }
 }
