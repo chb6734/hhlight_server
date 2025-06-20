@@ -1,13 +1,22 @@
-import { BadRequestException, Body, Controller, Get, NotFoundException, Param, ParseIntPipe, Post } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+  Post,
+} from "@nestjs/common";
 import { CouponService } from "../domain/service/coupon.service";
 import { GetAllCouponsResDto } from "./dto/get-all-coupons.res.dto";
 import { IssueCouponReqDto } from "./dto/issue-coupon.req.dto";
 import { IssueCouponResDto } from "./dto/issue-coupon.res.dto";
-import { IssueCouponCommand } from "../domain/dto/issue-coupon.command";
+import { IssueCouponCommand } from "../domain/dto/issue-coupon.command.dto";
 import { UseCouponReqDto } from "./dto/use-coupon.req.dto";
 import { UseCouponResDto } from "./dto/use-coupon.res.dto";
-import { UseCouponCommand } from "../domain/dto/use-coupon.command";
-import { GetCouponsByMemberCommand } from "../domain/dto/get-coupons-by-member.command";
+import { UseCouponCommand } from "../domain/dto/use-coupon.command.dto";
+import { GetCouponsByMemberCommand } from "../domain/dto/get-coupons-by-member.command.dto";
 import { GetCouponByMemberResDto } from "./dto/get-coupons-by-member.res.dto";
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 
@@ -47,7 +56,7 @@ export class CouponController {
     };
 
     try {
-      return await this.couponService.issue(command);
+      return await this.couponService.issueCoupon(command);
     } catch (error) {
       switch (error.message) {
         case "ALREADY_HAVING_COUPON":
@@ -73,7 +82,7 @@ export class CouponController {
     };
 
     try {
-      return await this.couponService.use(command);
+      return await this.couponService.useCoupon(command);
     } catch (error) {
       switch (error.message) {
         case "NOT_FOUND_MEMBER_COUPON":

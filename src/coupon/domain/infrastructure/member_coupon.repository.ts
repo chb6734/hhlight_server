@@ -9,27 +9,27 @@ export class MemberCouponRepository extends PrismaRepository<Member_Coupon> impl
   }
 
   async issueCoupon(memberId: number, couponId: number): Promise<Member_Coupon> {
-    return await this.create({ memberId, couponId, isUsed: false })
+    return await this.create({ memberId, couponId, isUsed: false });
   }
 
   async useCoupon(memberId: number, couponId: number): Promise<Member_Coupon> {
     return await this.prisma.member_Coupon.update({
       where: { memberId_couponId: { memberId, couponId } },
       data: {
-        isUsed: true
-      }
-    })
+        isUsed: true,
+      },
+    });
   }
 
   async getCouponsByMember(memberId: number): Promise<Member_Coupon[]> {
     return await this.prisma.member_Coupon.findMany({
       where: { memberId },
-    })
+    });
   }
 
   async getCouponsByMemberAndCoupon(memberId: number, couponId: number): Promise<Member_Coupon> {
     return await this.prisma.member_Coupon.findUnique({
       where: { memberId_couponId: { memberId, couponId } },
-    })
+    });
   }
 }
