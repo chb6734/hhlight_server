@@ -6,7 +6,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
   constructor() {
     const runMode = process.env.RUN_MODE;
     const databaseUrl = runMode === "test" ? process.env.TEST_DATABASE_URL : process.env.DATABASE_URL;
-
+    
     super({
       datasources: {
         db: {
